@@ -1,5 +1,4 @@
-# Build InputFlow installers (Windows NSIS + macOS DMG)
-# Artefak bisa diunduh dari tab Actions → run → Artifacts
+# Build InputFlow installers + publikasi ke GitHub Releases (unduhan publik)
 
 name: Build installers
 
@@ -52,7 +51,7 @@ jobs:
           name: InputFlow-Windows-x64
           path: frontend/release/*.exe
           if-no-files-found: error
-          retention-days: 30
+          retention-days: 90
 
   build-macos:
     name: macOS DMG (arm64)
@@ -91,34 +90,71 @@ jobs:
           name: InputFlow-macOS-arm64
           path: frontend/release/*.dmg
           if-no-files-found: error
-          retention-days: 30
+          retention-days: 90
 
   release:
     name: Publish GitHub Release
     needs: [build-windows, build-macos]
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: |
+      always() &&
+      needs.build-windows.result == 'success' &&
+      needs.build-macos.result == 'success' &&
+      (
+        (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')) ||
+        startsWith(github.ref, 'refs/tags/v') ||
+        github.event_name == 'workflow_dispatch'
+      )
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - name: Download Windows artifact
+      - name: Download Windows installer
         uses: actions/download-artifact@v4
         with:
           name: InputFlow-Windows-x64
           path: dist/windows
 
-      - name: Download macOS artifact
+      - name: Download macOS installer
         uses: actions/download-artifact@v4
         with:
           name: InputFlow-macOS-arm64
           path: dist/macos
 
-      - name: Create GitHub Release
+      - name: Set release metadata
+        id: meta
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            TAG="${GITHUB_REF#refs/tags/}"
+            echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+            echo "name=InputFlow $TAG" >> "$GITHUB_OUTPUT"
+            echo "prerelease=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=latest" >> "$GITHUB_OUTPUT"
+            echo "name=InputFlow (Latest)" >> "$GITHUB_OUTPUT"
+            echo "prerelease=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish to GitHub Releases
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ steps.meta.outputs.tag }}
+          name: ${{ steps.meta.outputs.name }}
+          prerelease: ${{ steps.meta.outputs.prerelease }}
+          make_latest: true
+          draft: false
+          body: |
+            ## Unduh InputFlow
+
+            | Platform | File | Cara pakai |
+            |----------|------|------------|
+            | **Windows 10/11 (64-bit)** | `InputFlow-Setup-*.exe` | Jalankan installer → Next → Install |
+            | **macOS (Apple Silicon)** | `InputFlow-*.dmg` | Buka DMG → tarik ke Applications |
+
+            Build otomatis dari commit `${{ github.sha }}` pada `${{ github.event.head_commit.timestamp || 'CI' }}`.
+
+            > Mac: aplikasi belum ditandatangani Apple — klik kanan → Buka jika macOS memblokir.
           files: |
             dist/windows/*
             dist/macos/*
-          generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

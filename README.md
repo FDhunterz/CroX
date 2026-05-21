@@ -1,5 +1,18 @@
 # InputFlow — Joystick → Keyboard
 
+## Unduh installer (publik)
+
+Rilis terbaru otomatis dari CI — bisa dibagikan ke siapa saja:
+
+**https://github.com/FDhunterz/CroX/releases/latest**
+
+| Platform | File |
+|----------|------|
+| Windows 10/11 (64-bit) | `InputFlow-Setup-*.exe` |
+| macOS Apple Silicon | `InputFlow-*.dmg` |
+
+---
+
 Aplikasi desktop (Windows & macOS) yang mengubah input **joystick menjadi tombol keyboard**, dengan pemetaan yang bisa ditambah/hapus manual oleh user.
 
 ## Fitur saat ini
