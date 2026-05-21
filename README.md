@@ -11,6 +11,13 @@ Rilis terbaru otomatis dari CI — bisa dibagikan ke siapa saja:
 | Windows 10/11 (64-bit) | `InputFlow-Setup-*.exe` |
 | macOS Apple Silicon | `InputFlow-*.dmg` |
 
+### Windows — jika app tidak jalan setelah install
+
+1. Pasang [Visual C++ Redistributable x64](https://aka.ms/vs/17/release/vc_redist.x64.exe) lalu buka ulang InputFlow.
+2. Controller **PlayStation** perlu mode **XInput** (DS4Windows, Steam Input, atau driver Xbox).
+3. Buka **joy.cpl** (Win+R → `joy.cpl`) — pastikan gamepad terlihat.
+4. Klik **Start** di app; status header harus berubah ke **Active** / `running`.
+
 ---
 
 Aplikasi desktop (Windows & macOS) yang mengubah input **joystick menjadi tombol keyboard**, dengan pemetaan yang bisa ditambah/hapus manual oleh user.

@@ -1,6 +1,14 @@
 import { contextBridge, ipcRenderer } from 'electron'
 
+export interface BootstrapInfo {
+  platform: string
+  nativeLoaded: boolean
+  nativeLoadError: string | null
+  isPackaged: boolean
+}
+
 export interface InputFlowApi {
+  getBootstrap: () => Promise<BootstrapInfo>
   initialize: () => Promise<boolean>
   start: () => Promise<boolean>
   stop: () => Promise<void>
@@ -21,6 +29,7 @@ export interface InputFlowApi {
 }
 
 const api: InputFlowApi = {
+  getBootstrap: () => ipcRenderer.invoke('app:getBootstrap'),
   initialize: () => ipcRenderer.invoke('app:initialize'),
   start: () => ipcRenderer.invoke('app:start'),
   stop: () => ipcRenderer.invoke('app:stop'),

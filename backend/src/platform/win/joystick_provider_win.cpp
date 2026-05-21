@@ -12,22 +12,44 @@ size_t buttonIndex(JoystickButton b) {
     return static_cast<size_t>(b);
 }
 
+/// Cari gamepad XInput pertama yang terhubung (slot 0–3).
+int findConnectedXInputIndex() {
+    for (DWORD i = 0; i < XUSER_MAX_COUNT; ++i) {
+        XINPUT_STATE state{};
+        if (XInputGetState(i, &state) == ERROR_SUCCESS) return static_cast<int>(i);
+    }
+    return -1;
+}
+
 class WinJoystickProvider final : public IJoystickProvider {
 public:
     std::string name() const override { return "xinput"; }
+    std::string captureMode() const override { return "shared"; }
 
-    bool initialize() override { return true; }
-    void shutdown() override {}
+    bool initialize() override {
+        deviceIndex_ = findConnectedXInputIndex();
+        return true;
+    }
+
+    void shutdown() override { deviceIndex_ = -1; }
 
     bool isConnected() const override {
+        if (deviceIndex_ < 0) return findConnectedXInputIndex() >= 0;
         XINPUT_STATE state{};
-        return XInputGetState(0, &state) == ERROR_SUCCESS;
+        return XInputGetState(static_cast<DWORD>(deviceIndex_), &state) == ERROR_SUCCESS;
     }
 
     bool poll(JoystickState& out) override {
         out.pressed.reset();
+        if (deviceIndex_ < 0) deviceIndex_ = findConnectedXInputIndex();
+        if (deviceIndex_ < 0) return false;
+
         XINPUT_STATE state{};
-        if (XInputGetState(0, &state) != ERROR_SUCCESS) return false;
+        if (XInputGetState(static_cast<DWORD>(deviceIndex_), &state) != ERROR_SUCCESS) {
+            deviceIndex_ = findConnectedXInputIndex();
+            if (deviceIndex_ < 0) return false;
+            if (XInputGetState(static_cast<DWORD>(deviceIndex_), &state) != ERROR_SUCCESS) return false;
+        }
 
         const WORD b = state.Gamepad.wButtons;
         auto set = [&](JoystickButton btn, bool pressed) {
@@ -52,6 +74,9 @@ public:
         set(JoystickButton::R3, b & XINPUT_GAMEPAD_RIGHT_THUMB);
         return true;
     }
+
+private:
+    int deviceIndex_{-1};
 };
 
 }  // namespace

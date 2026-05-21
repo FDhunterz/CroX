@@ -1,5 +1,5 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
-import { join } from 'path'
+import { app, BrowserWindow, ipcMain, dialog } from 'electron'
+import { join, dirname } from 'path'
 import { existsSync, mkdirSync, copyFileSync } from 'fs'
 
 let mainWindow: BrowserWindow | null = null
@@ -24,11 +24,20 @@ let native: {
   deleteProfile: (name: string) => boolean
 } | null = null
 
-function loadNativeModule(): void {
+let nativeLoadError: string | null = null
+
+function loadNativeModule(): boolean {
+  native = null
+  nativeLoadError = null
+
   const candidates: string[] = []
 
   if (app.isPackaged) {
-    candidates.push(join(process.resourcesPath, 'native', 'inputflow_native.node'))
+    candidates.push(
+      join(process.resourcesPath, 'native', 'inputflow_native.node'),
+      join(process.resourcesPath, 'app.asar.unpacked', 'native', 'inputflow_native.node'),
+      join(dirname(process.execPath), 'resources', 'native', 'inputflow_native.node')
+    )
   } else {
     candidates.push(
       join(process.cwd(), 'native/build/Release/inputflow_native.node'),
@@ -39,14 +48,24 @@ function loadNativeModule(): void {
   }
 
   for (const p of candidates) {
-    if (existsSync(p)) {
+    if (!existsSync(p)) continue
+    try {
       // eslint-disable-next-line @typescript-eslint/no-require-imports
       native = require(p)
       console.log('[InputFlow] Native loaded:', p)
-      return
+      return true
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      console.error('[InputFlow] Native load failed:', p, msg)
+      nativeLoadError = msg
     }
   }
-  console.warn('[InputFlow] Native module not found — UI-only mode')
+
+  if (!nativeLoadError) {
+    nativeLoadError = `File tidak ditemukan. Dicoba:\n${candidates.join('\n')}`
+  }
+  console.warn('[InputFlow] Native module not available —', nativeLoadError)
+  return false
 }
 
 function bundledConfigPath(): string {
@@ -73,10 +92,25 @@ function createWindow(): void {
     minHeight: 760,
     backgroundColor: '#0B0F17',
     title: 'InputFlow',
+    show: false,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       contextIsolation: true,
       nodeIntegration: false
+    }
+  })
+
+  mainWindow.once('ready-to-show', () => {
+    mainWindow?.show()
+    if (!native && nativeLoadError) {
+      const extra =
+        process.platform === 'win32'
+          ? '\n\nPasang Microsoft Visual C++ Redistributable 2015–2022 (x64), lalu jalankan ulang InputFlow.'
+          : ''
+      dialog.showErrorBox(
+        'InputFlow — modul native gagal',
+        `${nativeLoadError}${extra}`
+      )
     }
   })
 
@@ -88,6 +122,13 @@ function createWindow(): void {
 }
 
 function registerIpc(): void {
+  ipcMain.handle('app:getBootstrap', () => ({
+    platform: process.platform,
+    nativeLoaded: native !== null,
+    nativeLoadError,
+    isPackaged: app.isPackaged
+  }))
+
   ipcMain.handle('app:initialize', () => native?.initialize(configDir()) ?? false)
   ipcMain.handle('app:start', () => native?.start() ?? false)
   ipcMain.handle('app:stop', () => {
@@ -101,7 +142,11 @@ function registerIpc(): void {
   ipcMain.handle('app:validateConfig', (_e, json: string) => native?.validateConfig(json) ?? '[]')
   ipcMain.handle('app:joystickConnected', () => native?.joystickConnected() ?? false)
   ipcMain.handle('app:getCaptureMode', () => native?.getCaptureMode() ?? 'shared')
-  ipcMain.handle('app:keyboardAccessibility', () => native?.keyboardAccessibility() ?? false)
+  ipcMain.handle('app:keyboardAccessibility', () => {
+    if (!native) return false
+    if (process.platform === 'win32') return true
+    return native.keyboardAccessibility()
+  })
   ipcMain.handle('app:getActiveProfile', () => native?.getActiveProfile() ?? 'default')
   ipcMain.handle('app:listProfiles', () => native?.listProfiles() ?? '[]')
   ipcMain.handle('app:switchProfile', (_e, name: string) => native?.switchProfile(name) ?? false)

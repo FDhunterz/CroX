@@ -24,6 +24,8 @@ export default function App() {
   const [joystickOk, setJoystickOk] = useState(false)
   const [message, setMessage] = useState('')
   const [configReady, setConfigReady] = useState(false)
+  const [nativeLoaded, setNativeLoaded] = useState(false)
+  const [platform, setPlatform] = useState('darwin')
   const liveGamepad = useGamepadLiveState()
 
   const refreshState = useCallback(async () => {
@@ -35,7 +37,19 @@ export default function App() {
   useEffect(() => {
     const boot = async () => {
       if (!window.inputflow) {
-        setMessage('Mode demo — modul native belum terpasang')
+        setMessage('Mode demo — bridge Electron belum terpasang')
+        setConfigReady(false)
+        return
+      }
+      const bootstrap = await window.inputflow.getBootstrap()
+      setPlatform(bootstrap.platform)
+      setNativeLoaded(bootstrap.nativeLoaded)
+      if (!bootstrap.nativeLoaded) {
+        const hint =
+          bootstrap.platform === 'win32'
+            ? ' Modul native gagal dimuat. Pasang Visual C++ Redistributable x64, atau unduh installer terbaru dari GitHub Releases.'
+            : ' Modul native tidak ditemukan.'
+        setMessage(`InputFlow tidak bisa berjalan.${hint}`)
         setConfigReady(false)
         return
       }
@@ -102,26 +116,35 @@ export default function App() {
       setMessage('Tidak bisa start — ada pemetaan duplikat')
       return
     }
-    if (!window.inputflow) {
-      setMessage('Native module tidak tersedia')
+    if (!window.inputflow || !nativeLoaded) {
+      setMessage('Backend native tidak tersedia — lihat pesan error saat buka app')
       return
     }
     await window.inputflow.setConfigJson(JSON.stringify(normalizeProfile(profile)))
-    const axOk = window.inputflow ? await window.inputflow.keyboardAccessibility() : false
-    if (!axOk) {
-      setMessage(
-        'Izin Accessibility diperlukan — aktifkan InputFlow di System Settings, lalu Start lagi.'
-      )
-      return
+    if (platform === 'darwin') {
+      const axOk = await window.inputflow.keyboardAccessibility()
+      if (!axOk) {
+        setMessage(
+          'Izin Accessibility diperlukan — aktifkan InputFlow di System Settings, lalu Start lagi.'
+        )
+        return
+      }
     }
     const ok = await window.inputflow.start()
-    setJoystickOk(window.inputflow ? await window.inputflow.joystickConnected() : false)
-    setEngineState(window.inputflow ? await window.inputflow.getState() : 'stopped')
-    setMessage(
-      ok
-        ? 'Mapping aktif (mode bersama)'
-        : 'Gagal start — sambungkan joystick lalu coba lagi'
-    )
+    setJoystickOk(await window.inputflow.joystickConnected())
+    setEngineState(await window.inputflow.getState())
+    if (ok) {
+      const joy = await window.inputflow.joystickConnected()
+      setMessage(
+        joy
+          ? 'Mapping aktif'
+          : platform === 'win32'
+            ? 'Mapping aktif — controller belum terdeteksi (XInput). Pakai Xbox layout / DS4Windows / Steam.'
+            : 'Mapping aktif — sambungkan controller'
+      )
+    } else {
+      setMessage('Gagal start — periksa pemetaan atau jalankan ulang sebagai administrator')
+    }
   }
 
   const handleStop = async () => {
@@ -144,7 +167,12 @@ export default function App() {
       ? liveGamepad.name
       : 'No Controller'
 
-  const isErrorToast = message.includes('Gagal') || message.includes('Perbaiki') || message.includes('diperlukan')
+  const isErrorToast =
+    message.includes('Gagal') ||
+    message.includes('Perbaiki') ||
+    message.includes('diperlukan') ||
+    message.includes('tidak bisa') ||
+    message.includes('tidak tersedia')
 
   return (
     <div className="app-shell">
@@ -152,6 +180,7 @@ export default function App() {
         engineState={engineState}
         joystickConnected={joystickOk || liveGamepad.connected}
         deviceName={deviceName}
+        startDisabled={!nativeLoaded}
         onStart={handleStart}
         onStop={handleStop}
       />

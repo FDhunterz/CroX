@@ -128,6 +128,7 @@ bool InputFlowApp::start() {
         state_ = EngineState::Error;
         return false;
     }
+#if defined(INPUTFLOW_PLATFORM_MACOS)
     if (keyboard_) keyboard_->refreshAccessibility();
     keyboardTrusted_ = keyboard_ ? keyboard_->accessibilityGranted() : checkMacAccessibility();
     if (!keyboardTrusted_) {
@@ -139,6 +140,9 @@ bool InputFlowApp::start() {
         state_ = EngineState::Error;
         return false;
     }
+#else
+    keyboardTrusted_ = true;
+#endif
     if (!engine_->start()) {
         state_ = EngineState::Error;
         return false;

@@ -4,6 +4,7 @@ interface Props {
   engineState: string
   joystickConnected: boolean
   deviceName: string
+  startDisabled?: boolean
   onStart: () => void
   onStop: () => void
 }
@@ -12,6 +13,7 @@ export function AppHeader({
   engineState,
   joystickConnected,
   deviceName,
+  startDisabled = false,
   onStart,
   onStop
 }: Props) {
@@ -50,7 +52,7 @@ export function AppHeader({
           type="button"
           className="btn-start"
           onClick={onStart}
-          disabled={running}
+          disabled={running || startDisabled}
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
             <path d="M8 5v14l11-7z" />
