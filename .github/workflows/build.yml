@@ -42,7 +42,6 @@ jobs:
         working-directory: frontend
         env:
           CI: true
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           npm ci
           npm run dist:win
@@ -82,7 +81,6 @@ jobs:
         env:
           CI: true
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           npm ci
           npm run dist:mac

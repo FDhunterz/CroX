@@ -4,16 +4,21 @@
   "description": "Joystick to keyboard mapping for macOS and Windows",
   "author": "InputFlow",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FDhunterz/CroX.git"
+  },
+  "homepage": "https://github.com/FDhunterz/CroX",
   "main": "./out/main/index.js",
   "scripts": {
     "dev": "electron-vite dev",
     "build": "electron-vite build",
     "preview": "electron-vite preview",
     "start": "electron-vite preview",
-    "dist:mac": "npm run build && electron-builder --mac --arm64",
-    "dist:mac:dir": "npm run build && electron-builder --mac dir --arm64",
-    "dist:win": "npm run build && electron-builder --win --x64",
-    "dist:win:portable": "npm run build && electron-builder --win portable --x64"
+    "dist:mac": "npm run build && electron-builder --mac --arm64 --publish never",
+    "dist:mac:dir": "npm run build && electron-builder --mac dir --arm64 --publish never",
+    "dist:win": "npm run build && electron-builder --win --x64 --publish never",
+    "dist:win:portable": "npm run build && electron-builder --win portable --x64 --publish never"
   },
   "dependencies": {
     "react": "^18.3.1",
@@ -32,6 +37,7 @@
   "build": {
     "appId": "com.inputflow.app",
     "productName": "InputFlow",
+    "publish": null,
     "copyright": "Copyright © 2026 InputFlow",
     "directories": {
       "output": "release",
