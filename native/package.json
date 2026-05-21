@@ -1,0 +1,18 @@
+{
+  "name": "inputflow-native",
+  "version": "0.1.0",
+  "private": true,
+  "main": "build/Release/inputflow_native.node",
+  "scripts": {
+    "build": "cmake-js compile -r electron -v 28.3.3 -T inputflow_native --CDCMAKE_BUILD_TYPE=Release",
+    "rebuild": "cmake-js rebuild -r electron -v 28.3.3 -T inputflow_native --CDCMAKE_BUILD_TYPE=Release",
+    "install": "npm run build"
+  },
+  "dependencies": {
+    "node-addon-api": "^8.0.0"
+  },
+  "devDependencies": {
+    "cmake-js": "^7.3.0",
+    "electron": "28.3.3"
+  }
+}

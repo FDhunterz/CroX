@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "InputFlow Joystick Mapping Profile",
+  "type": "object",
+  "required": ["id", "name", "mappings"],
+  "properties": {
+    "id": { "type": "string" },
+    "name": { "type": "string" },
+    "mappings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id"],
+        "properties": {
+          "id": { "type": "string" },
+          "buttons": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "enum": ["A","B","X","Y","LB","RB","LT","RT","DPAD_UP","DPAD_DOWN","DPAD_LEFT","DPAD_RIGHT","START","BACK","L3","R3"]
+            }
+          },
+          "joystickButton": {
+            "enum": ["A","B","X","Y","LB","RB","LT","RT","DPAD_UP","DPAD_DOWN","DPAD_LEFT","DPAD_RIGHT","START","BACK","L3","R3"]
+          },
+          "key": { "type": "string" },
+          "modifiers": {
+            "type": "array",
+            "items": { "enum": ["Ctrl", "Shift", "Alt", "Meta"] }
+          },
+          "enabled": { "type": "boolean", "default": true }
+        }
+      }
+    }
+  }
+}

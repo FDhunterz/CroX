@@ -1,0 +1,20 @@
+{
+  "name": "inputflow",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Cross-platform keyboard macro and remapping desktop app",
+  "scripts": {
+    "install:all": "npm install && cd frontend && npm install && cd ../native && npm install",
+    "build:native": "cd native && npm run build",
+    "build:frontend": "cd frontend && npm run build",
+    "build:mac": "bash scripts/build-mac-app.sh",
+    "install:mac": "bash scripts/install-mac-app.sh",
+    "dev": "cd frontend && npm run dev",
+    "start": "cd frontend && npm run start"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": ["electron", "macro", "keyboard", "inputflow"],
+  "license": "MIT"
+}

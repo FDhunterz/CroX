@@ -1,0 +1,111 @@
+{
+  "name": "inputflow",
+  "version": "0.1.0",
+  "description": "Joystick to keyboard mapping for macOS and Windows",
+  "author": "InputFlow",
+  "private": true,
+  "main": "./out/main/index.js",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "preview": "electron-vite preview",
+    "start": "electron-vite preview",
+    "dist:mac": "npm run build && electron-builder --mac --arm64",
+    "dist:mac:dir": "npm run build && electron-builder --mac dir --arm64",
+    "dist:win": "npm run build && electron-builder --win --x64",
+    "dist:win:portable": "npm run build && electron-builder --win portable --x64"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "electron": "^28.3.3",
+    "electron-builder": "^24.13.3",
+    "electron-vite": "^2.3.0",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.2"
+  },
+  "build": {
+    "appId": "com.inputflow.app",
+    "productName": "InputFlow",
+    "copyright": "Copyright © 2026 InputFlow",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "out/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "../native/build/Release/inputflow_native.node",
+        "to": "native/inputflow_native.node"
+      },
+      {
+        "from": "../configs/default.json",
+        "to": "configs/default.json"
+      }
+    ],
+    "asar": true,
+    "asarUnpack": [
+      "**/*.node"
+    ],
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["arm64"]
+        },
+        {
+          "target": "dir",
+          "arch": ["arm64"]
+        }
+      ],
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.inherit.plist",
+      "extendInfo": {
+        "CFBundleDisplayName": "InputFlow",
+        "NSHumanReadableCopyright": "InputFlow"
+      }
+    },
+    "dmg": {
+      "title": "InputFlow ${version}",
+      "contents": [
+        { "x": 130, "y": 220 },
+        { "x": 410, "y": 220, "type": "link", "path": "/Applications" }
+      ]
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "artifactName": "InputFlow-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "allowElevation": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "InputFlow",
+      "displayLanguageSelector": false,
+      "installerLanguages": ["en_US", "id_ID"],
+      "language": "1033",
+      "runAfterFinish": true
+    },
+    "portable": {
+      "artifactName": "InputFlow-Portable-${version}.${ext}"
+    }
+  }
+}

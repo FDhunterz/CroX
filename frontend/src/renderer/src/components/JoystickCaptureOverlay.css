@@ -1,0 +1,117 @@
+.capture-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  background: rgba(11, 15, 23, 0.82);
+  backdrop-filter: blur(12px);
+}
+
+.capture-card {
+  width: min(400px, 90vw);
+  padding: 36px 32px;
+  border-radius: var(--radius-lg);
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-soft), var(--shadow-glow);
+  text-align: center;
+}
+
+.capture-pulse {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 32px;
+  background: rgba(77, 124, 254, 0.15);
+  box-shadow: 0 0 40px var(--accent-glow);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 0.85;
+  }
+}
+
+.capture-card h3 {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.capture-hint {
+  font-size: 14px;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.capture-sub {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.capture-sub-muted {
+  font-size: 11px;
+  opacity: 0.85;
+  margin-bottom: 20px;
+  line-height: 1.45;
+}
+
+.capture-combo-preview {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  margin-bottom: 12px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: rgba(77, 124, 254, 0.12);
+  border: 1px solid rgba(77, 124, 254, 0.28);
+}
+
+.capture-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.capture-done {
+  height: 44px;
+  padding: 0 24px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  color: #fff;
+  background: var(--accent-gradient);
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.capture-done:hover {
+  filter: brightness(1.08);
+}
+
+.capture-cancel {
+  height: 44px;
+  padding: 0 24px;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
+}
+
+.capture-cancel:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.1);
+}

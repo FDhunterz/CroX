@@ -1,0 +1,132 @@
+.profile-manager {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.profile-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.profile-label select {
+  height: 36px;
+  min-width: 140px;
+  padding: 0 12px;
+  border-radius: 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.profile-btn {
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  transition: all 0.15s;
+}
+
+.profile-btn:hover:not(:disabled) {
+  color: var(--text);
+  border-color: var(--border-strong);
+  background: rgba(77, 124, 254, 0.1);
+}
+
+.profile-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: grid;
+  place-items: center;
+  background: rgba(11, 15, 23, 0.75);
+  backdrop-filter: blur(6px);
+}
+
+.profile-dialog {
+  width: min(400px, 92vw);
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-soft);
+}
+
+.profile-dialog h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.profile-dialog-hint {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+.profile-dialog-hint code {
+  color: var(--accent);
+  font-size: 11px;
+}
+
+.profile-dialog-input {
+  width: 100%;
+  height: 44px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--text);
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.profile-dialog-input:focus {
+  outline: none;
+  border-color: rgba(77, 124, 254, 0.5);
+  box-shadow: 0 0 0 2px rgba(77, 124, 254, 0.2);
+}
+
+.profile-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.profile-dialog-btn {
+  height: 40px;
+  padding: 0 18px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
+}
+
+.profile-dialog-btn.primary {
+  color: #fff;
+  background: rgba(77, 124, 254, 0.35);
+  border-color: rgba(77, 124, 254, 0.5);
+}
+
+.profile-dialog-btn:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.profile-dialog-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

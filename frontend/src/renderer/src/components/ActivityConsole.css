@@ -1,0 +1,15 @@
+.console-panel {
+  height: calc(100vh - 140px);
+  display: flex;
+  flex-direction: column;
+}
+
+.console-output {
+  flex: 1;
+  overflow: auto;
+  font-family: ui-monospace, monospace;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--muted);
+  white-space: pre-wrap;
+}

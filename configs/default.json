@@ -1,0 +1,23 @@
+{
+  "id": "default",
+  "name": "Default Joystick Mapping",
+  "exclusiveCapture": false,
+  "mappings": [
+    {
+      "id": "lb-alt-shift",
+      "buttons": ["LB"],
+      "joystickButton": "LB",
+      "key": "",
+      "modifiers": ["Alt", "Shift"],
+      "enabled": true
+    },
+    {
+      "id": "rb-ctrl-shift",
+      "buttons": ["RB"],
+      "joystickButton": "RB",
+      "key": "",
+      "modifiers": ["Ctrl", "Shift"],
+      "enabled": true
+    }
+  ]
+}

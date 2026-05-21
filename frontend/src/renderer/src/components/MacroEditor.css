@@ -1,0 +1,25 @@
+.macro-list {
+  list-style: none;
+}
+
+.macro-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.macro-list li.disabled {
+  opacity: 0.5;
+}
+
+.step-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.step-row select {
+  min-width: 120px;
+}

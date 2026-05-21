@@ -1,0 +1,33 @@
+# Build
+build/
+out/
+dist/
+cmake-build-*/
+
+# Node
+node_modules/
+frontend/node_modules/
+native/node_modules/
+*.log
+npm-debug.log*
+
+# Electron
+frontend/dist/
+frontend/release/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Native addon
+native/build/
+*.node
+
+# Config overrides (keep examples)
+configs/*.local.json
+
+# OS
+Thumbs.db

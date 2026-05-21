@@ -1,0 +1,95 @@
+.controller-status-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.controller-card-title {
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.controller-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.meta-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.meta-icon {
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.meta-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.meta-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  display: block;
+  margin-bottom: 6px;
+}
+
+.meta-bar.track {
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+
+.meta-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.35s ease;
+}
+
+.meta-bar-fill.success {
+  background: linear-gradient(90deg, #2ed47a, #22b86a);
+}
+
+.meta-bar-fill.accent {
+  background: linear-gradient(90deg, #4d7cfe, #6b93ff);
+}
+
+.meta-bar-fill.warn {
+  background: linear-gradient(90deg, #e8a838, #f0bc4a);
+}
+
+.meta-bar-fill.muted {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.controller-hint {
+  font-size: 11px;
+  line-height: 1.45;
+  color: #f0bc4a;
+  text-align: center;
+  margin: 0;
+}
+
+.meta-value {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  margin-top: 4px;
+  display: block;
+}
+
+.controller-device-caption {
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-align: center;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+  opacity: 0.8;
+}

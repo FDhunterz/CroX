@@ -1,0 +1,50 @@
+.config-transfer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.profile-btn.config {
+  color: var(--accent);
+  border-color: rgba(77, 124, 254, 0.35);
+  background: rgba(77, 124, 254, 0.08);
+}
+
+.profile-btn.config.apply {
+  background: rgba(77, 124, 254, 0.14);
+}
+
+.profile-btn.config:hover:not(:disabled) {
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.config-apply-dialog {
+  width: min(520px, 94vw);
+}
+
+.config-apply-textarea {
+  width: 100%;
+  min-height: 200px;
+  max-height: 45vh;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.45;
+  resize: vertical;
+  margin-bottom: 10px;
+}
+
+.config-apply-textarea:focus {
+  outline: none;
+  border-color: rgba(77, 124, 254, 0.5);
+  box-shadow: 0 0 0 2px rgba(77, 124, 254, 0.2);
+}
+
+.config-apply-toolbar {
+  margin-bottom: 14px;
+}
