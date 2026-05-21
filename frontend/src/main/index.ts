@@ -1,6 +1,6 @@
 import { app, BrowserWindow, ipcMain, dialog } from 'electron'
 import { join, dirname } from 'path'
-import { existsSync, mkdirSync, copyFileSync, appendFileSync } from 'fs'
+import { existsSync, mkdirSync, copyFileSync, appendFileSync, statSync } from 'fs'
 
 let mainWindow: BrowserWindow | null = null
 let windowEverShown = false
@@ -167,16 +167,11 @@ function runStartupPreflight(): boolean {
   if (!nativePath) {
     pushError(`Modul native tidak ditemukan. Dicoba:\n${nativeModuleCandidates().join('\n')}`)
   } else {
-    startupLog(`Native path: ${nativePath}`)
     try {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      native = require(nativePath)
-      nativeLoadError = null
-      startupLog('Native module loaded OK in preflight')
+      const size = statSync(nativePath).size
+      startupLog(`Native file OK: ${nativePath} (${size} bytes) — load ditunda (hindari crash sebelum UI)`)
     } catch (e) {
-      native = null
-      nativeLoadError = errMsg(e)
-      pushError(`Gagal memuat modul native:\n${nativePath}\n\n${nativeLoadError}`)
+      pushError(`Native tidak bisa dibaca: ${nativePath}\n${errMsg(e)}`)
     }
   }
 
@@ -195,14 +190,18 @@ function ensureNativeLoaded(): boolean {
     pushError(nativeLoadError)
     return false
   }
+  startupLog(`Loading native module: ${path}`)
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     native = require(path)
     nativeLoadError = null
+    startupLog('Native module loaded OK')
     return true
   } catch (e) {
     nativeLoadError = errMsg(e)
-    pushError(`Gagal memuat native: ${nativeLoadError}`)
+    pushError(
+      `Gagal memuat modul native (crash DLL/runtime?):\n${path}\n\n${nativeLoadError}\n\nPasang VC++ 2015-2022 x64: https://aka.ms/vs/17/release/vc_redist.x64.exe`
+    )
     return false
   }
 }

@@ -24,7 +24,7 @@ open /Applications/InputFlow.app
 
 1. Unduh `InputFlow-Setup-<versi>.exe`
 2. Jalankan installer (Next → Install)
-3. Pasang [Visual C++ Redistributable x64](https://aka.ms/vs/17/release/vc_redist.x64.exe) jika app tertutup atau muncul error modul native
+3. **Wajib** pasang [Visual C++ Redistributable x64](https://aka.ms/vs/17/release/vc_redist.x64.exe) — tanpa ini modul native bisa crash saat dibuka
 4. Buka InputFlow dari Start Menu
 5. Jika ada **dialog error**, catat pesannya; log ada di:
 

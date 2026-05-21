@@ -8,10 +8,8 @@ project(inputflow_native VERSION 0.1.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Windows: link MSVC runtime statically agar .node jalan tanpa VC++ Redist (kurangi crash diam-diam)
-if(WIN32 AND MSVC)
-  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-endif()
+# Windows: pakai runtime dinamis (/MD) — HARUS sama dengan Node/Electron (jangan /MT statis).
+# VC++ Redistributable x64 diperlukan di mesin user.
 
 set(INPUTFLOW_ROOT "${CMAKE_CURRENT_LIST_DIR}/..")
 
