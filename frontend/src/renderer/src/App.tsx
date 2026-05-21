@@ -43,20 +43,28 @@ export default function App() {
       }
       const bootstrap = await window.inputflow.getBootstrap()
       setPlatform(bootstrap.platform)
-      setNativeLoaded(bootstrap.nativeLoaded)
-      if (!bootstrap.nativeLoaded) {
+      setNativeLoaded(bootstrap.nativeModuleFound)
+      if (!bootstrap.nativeModuleFound) {
         const hint =
           bootstrap.platform === 'win32'
-            ? ' Modul native gagal dimuat. Pasang Visual C++ Redistributable x64, atau unduh installer terbaru dari GitHub Releases.'
+            ? ' File native tidak ada di folder install. Unduh installer terbaru dari GitHub Releases.'
             : ' Modul native tidak ditemukan.'
         setMessage(`InputFlow tidak bisa berjalan.${hint}`)
         setConfigReady(false)
         return
       }
+      if (bootstrap.nativeLoadError) {
+        setMessage(`Modul native error: ${bootstrap.nativeLoadError}`)
+      }
       const ok = await window.inputflow.initialize()
+      setNativeLoaded(ok)
       setConfigReady(ok)
       if (!ok) {
-        setMessage('Gagal menginisialisasi backend profil')
+        setMessage(
+          bootstrap.platform === 'win32'
+            ? 'Gagal menginisialisasi backend. Pasang VC++ Redistributable x64 atau lihat log di %APPDATA%\\inputflow\\inputflow-startup.log'
+            : 'Gagal menginisialisasi backend profil'
+        )
         return
       }
       try {
