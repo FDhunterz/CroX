@@ -10,6 +10,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Windows: pakai runtime dinamis (/MD) — HARUS sama dengan Node/Electron (jangan /MT statis).
 # VC++ Redistributable x64 diperlukan di mesin user.
+# Override /MT default cmake-js lewat --CDCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDLL di package.json.
 
 set(INPUTFLOW_ROOT "${CMAKE_CURRENT_LIST_DIR}/..")
 
@@ -46,6 +47,7 @@ add_subdirectory("${INPUTFLOW_ROOT}/backend" "${CMAKE_BINARY_DIR}/inputflow_back
 add_library(inputflow_native SHARED
   src/bridge.cpp
   src/engine_wrapper.cpp
+  $<$<BOOL:${WIN32}>:src/win_delay_load_hook.cc>
 )
 
 target_include_directories(inputflow_native PRIVATE

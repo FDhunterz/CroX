@@ -4,8 +4,8 @@
   "private": true,
   "main": "build/Release/inputflow_native.node",
   "scripts": {
-    "build": "cmake-js compile -r electron -v 28.3.3 -T inputflow_native --CDCMAKE_BUILD_TYPE=Release",
-    "rebuild": "cmake-js rebuild -r electron -v 28.3.3 -T inputflow_native --CDCMAKE_BUILD_TYPE=Release",
+    "build": "cmake-js compile -r electron -v 28.3.3 -T inputflow_native --CDCMAKE_BUILD_TYPE=Release --CDCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDLL",
+    "rebuild": "cmake-js rebuild -r electron -v 28.3.3 -T inputflow_native --CDCMAKE_BUILD_TYPE=Release --CDCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDLL",
     "install": "npm run build"
   },
   "dependencies": {

@@ -152,7 +152,8 @@ function runStartupPreflight(): boolean {
   if (!existsSync(preloadPath)) {
     pushError(`Preload hilang: ${preloadPath}`)
   }
-  if (!existsSync(rendererHtml)) {
+  // Dev: electron-vite serves renderer via ELECTRON_RENDERER_URL — out/renderer/index.html belum ada.
+  if (!existsSync(rendererHtml) && !process.env.ELECTRON_RENDERER_URL) {
     pushError(`UI (index.html) hilang: ${rendererHtml}`)
   }
 
@@ -210,7 +211,15 @@ function bundledConfigPath(): string {
   if (app.isPackaged) {
     return join(process.resourcesPath, 'configs', 'default.json')
   }
-  return join(process.cwd(), 'configs', 'default.json')
+  const candidates = [
+    join(process.cwd(), 'configs', 'default.json'),
+    join(process.cwd(), '../configs', 'default.json'),
+    join(__dirname, '../../../configs/default.json')
+  ]
+  for (const p of candidates) {
+    if (existsSync(p)) return p
+  }
+  return candidates[0]
 }
 
 function configDir(): string {
