@@ -22,8 +22,10 @@ frontend/release/
 *.swo
 .DS_Store
 
-# Native addon
+# Native addon (CMake / cmake-js — jangan commit)
 native/build/
+native/..build/
+**/_deps/
 *.node
 
 # Config overrides (keep examples)
