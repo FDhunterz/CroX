@@ -31,6 +31,15 @@ jobs:
             native/package-lock.json
             frontend/package-lock.json
 
+      - name: Set app version from Git tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        working-directory: frontend
+        shell: bash
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          echo "Using version $VERSION from tag"
+          npm version "$VERSION" --no-git-tag-version --allow-same-version
+
       - name: Build native module
         working-directory: native
         run: |
@@ -68,6 +77,15 @@ jobs:
           cache-dependency-path: |
             native/package-lock.json
             frontend/package-lock.json
+
+      - name: Set app version from Git tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        working-directory: frontend
+        shell: bash
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          echo "Using version $VERSION from tag"
+          npm version "$VERSION" --no-git-tag-version --allow-same-version
 
       - name: Build native module
         working-directory: native
@@ -147,12 +165,27 @@ jobs:
 
             | Platform | File | Cara pakai |
             |----------|------|------------|
-            | **Windows 10/11 (64-bit)** | `InputFlow-Setup-*.exe` | Jalankan installer → Next → Install |
-            | **macOS (Apple Silicon)** | `InputFlow-*.dmg` | Buka DMG → tarik ke Applications |
+            | **Windows 10/11 (64-bit)** | `InputFlow-Setup-*.exe` | Installer → Next → Install |
+            | **macOS (Apple Silicon M1/M2/M3)** | `InputFlow-*-arm64.dmg` | Buka DMG → tarik ke Applications |
 
-            Build otomatis dari commit `${{ github.sha }}` pada `${{ github.event.head_commit.timestamp || 'CI' }}`.
+            ### macOS — pesan "is damaged" / tidak bisa dibuka
 
-            > Mac: aplikasi belum ditandatangani Apple — klik kanan → Buka jika macOS memblokir.
+            Bukan file rusak — macOS memblokir app unduhan (Gatekeeper). Setelah tarik ke Applications, jalankan di **Terminal**:
+
+            ```bash
+            xattr -cr /Applications/InputFlow.app
+            open /Applications/InputFlow.app
+            ```
+
+            Atau: klik kanan app → **Open** → **Open** lagi (bukan double-click pertama).
+
+            ### Windows — app tertutup / tidak jalan
+
+            1. Pasang [VC++ Redistributable x64](https://aka.ms/vs/17/release/vc_redist.x64.exe)
+            2. Jika ada dialog error, baca isinya; log: `%APPDATA%\inputflow\inputflow-startup.log`
+            3. Controller PlayStation: aktifkan mode XInput (DS4Windows / Steam)
+
+            Build: `${{ github.sha }}`
           files: |
             dist/windows/*
             dist/macos/*

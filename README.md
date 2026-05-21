@@ -8,8 +8,25 @@ Rilis terbaru otomatis dari CI — bisa dibagikan ke siapa saja:
 
 | Platform | File |
 |----------|------|
-| Windows 10/11 (64-bit) | `InputFlow-Setup-*.exe` |
-| macOS Apple Silicon | `InputFlow-*.dmg` |
+| Windows 10/11 (64-bit) | `InputFlow-Setup-<versi>.exe` |
+| macOS Apple Silicon | `InputFlow-<versi>-arm64.dmg` |
+
+Versi file mengikuti `version` di `frontend/package.json`.
+
+### macOS — "InputFlow is damaged and can't be opened"
+
+Ini **bukan** file corrupt. macOS (Gatekeeper) memblokir app yang diunduh dari internet tanpa Apple Developer signature.
+
+**Setelah** tarik `InputFlow.app` ke folder **Applications**, jalankan di Terminal:
+
+```bash
+xattr -cr /Applications/InputFlow.app
+open /Applications/InputFlow.app
+```
+
+Alternatif: **klik kanan** `InputFlow.app` → **Open** → konfirmasi **Open** (jangan double-click pertama kali).
+
+> Butuh Mac **Apple Silicon** (M1/M2/M3). Intel Mac tidak didukung build saat ini.
 
 ### Windows — jika app tidak jalan setelah install
 

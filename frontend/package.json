@@ -1,6 +1,6 @@
 {
   "name": "inputflow",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "description": "Joystick to keyboard mapping for macOS and Windows",
   "author": "InputFlow",
   "private": true,
@@ -66,13 +66,10 @@
         {
           "target": "dmg",
           "arch": ["arm64"]
-        },
-        {
-          "target": "dir",
-          "arch": ["arm64"]
         }
       ],
-      "hardenedRuntime": true,
+      "identity": "-",
+      "hardenedRuntime": false,
       "gatekeeperAssess": false,
       "entitlements": "build/entitlements.mac.plist",
       "entitlementsInherit": "build/entitlements.mac.inherit.plist",
